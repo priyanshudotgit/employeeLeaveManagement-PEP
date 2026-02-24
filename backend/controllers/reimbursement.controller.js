@@ -1,59 +1,52 @@
-const Reimbursement = require('../models/reimbursement.model.js');
+import Reimbursement from '../models/reimbursement.model.js';
 
-const createReimbursement = async (req, res) => {
-    const { amount, reason, receiptUrl } = req.body;
-
+export const submitReimbursement = async (req, res) => {
     try {
-        const reimbursement = new Reimbursement({
-            user: req.user._id,
-            amount,
-            reason,
-            receiptUrl,
+        const { title, description, amount } = req.body;
+        const reimbursement = await Reimbursement.create({
+            employeeId: req.user._id,
+            title,
+            description,
+            amount
         });
-
-        const createdReimbursement = await reimbursement.save();
-        res.status(201).json(createdReimbursement);
+        res.status(201).json(reimbursement);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-const getMyReimbursements = async (req, res) => {
+export const getMyReimbursements = async (req, res) => {
     try {
-        const reimbursements = await Reimbursement.find({ user: req.user._id });
+        const reimbursements = await Reimbursement.find({ employeeId: req.user._id });
         res.json(reimbursements);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-const getReimbursements = async (req, res) => {
+export const getAllReimbursements = async (req, res) => {
     try {
-        const reimbursements = await Reimbursement.find({}).populate('user', 'name email');
+        const reimbursements = await Reimbursement.find().populate('employeeId', 'name email');
         res.json(reimbursements);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-const updateReimbursementStatus = async (req, res) => {
-    const { status } = req.body;
-
+export const resolveReimbursement = async (req, res) => {
     try {
-        const reimbursement = await Reimbursement.findById(req.params.id);
-
-        if (reimbursement) {
-            reimbursement.status = status;
-            reimbursement.resolver = req.user._id;
-
-            const updatedReimbursement = await reimbursement.save();
-            res.json(updatedReimbursement);
-        } else {
-            res.status(404).json({ message: 'Reimbursement not found' });
+        const { status } = req.body;
+        if (!['approved', 'rejected'].includes(status)) {
+            return res.status(400).json({ message: 'Invalid status' });
         }
+        const reimbursement = await Reimbursement.findById(req.params.id);
+        if (!reimbursement) {
+            return res.status(404).json({ message: 'Reimbursement not found' });
+        }
+        reimbursement.status = status;
+        const updatedReimbursement = await reimbursement.save();
+        res.json(updatedReimbursement);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
-
-module.exports = { createReimbursement, getMyReimbursements, getReimbursements, updateReimbursementStatus };

@@ -1,10 +1,16 @@
-const express = require('express');
+import express from 'express';
+import { submitReimbursement, getMyReimbursements, getAllReimbursements, resolveReimbursement } from '../controllers/reimbursement.controller.js';
+import { protect } from '../middleware/auth.middleware.js';
+import { authorizeRoles } from '../middleware/role.middleware.js';
+
 const router = express.Router();
-const { createReimbursement, getMyReimbursements, getReimbursements, updateReimbursementStatus } = require('../controllers/reimbursement.controller.js');
-const { protect, admin } = require('../middleware/auth.middleware.js');
 
-router.route('/').post(protect, createReimbursement).get(protect, admin, getReimbursements);
-router.route('/my').get(protect, getMyReimbursements);
-router.route('/:id/status').put(protect, admin, updateReimbursementStatus);
+router.use(protect);
 
-module.exports = router;
+router.post('/', submitReimbursement);
+router.get('/my', getMyReimbursements);
+
+router.get('/all', authorizeRoles('admin', 'manager'), getAllReimbursements);
+router.patch('/:id/resolve', authorizeRoles('admin', 'manager'), resolveReimbursement);
+
+export default router;

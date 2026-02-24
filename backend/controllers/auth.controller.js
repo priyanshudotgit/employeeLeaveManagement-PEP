@@ -1,32 +1,33 @@
-const User = require('../models/user.model.js');
-const generateToken = require('../utils/generateToken.js');
+import User from '../models/user.model.js';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
-const registerUser = async (req, res) => {
-    const { name, email, password, role, managerId } = req.body;
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+};
 
+export const registerUser = async (req, res) => {
     try {
-        const userExists = await User.findOne({ email });
+        const { name, email, password, role } = req.body;
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: 'Please add all required fields' });
+        }
 
+        const userExists = await User.findOne({ email });
         if (userExists) {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        const user = await User.create({
-            name,
-            email,
-            password,
-            role: role || 'Employee',
-            manager: managerId || null,
-        });
+        const userRole = role && ['admin', 'manager', 'employee'].includes(role) ? role : 'employee';
+        const user = await User.create({ name, email, password, role: userRole });
 
         if (user) {
             res.status(201).json({
-                _id: user._id,
+                _id: user.id,
                 name: user.name,
                 email: user.email,
                 role: user.role,
-                manager: user.manager,
-                token: generateToken(user._id),
+                token: generateToken(user._id)
             });
         } else {
             res.status(400).json({ message: 'Invalid user data' });
@@ -36,61 +37,26 @@ const registerUser = async (req, res) => {
     }
 };
 
-const authUser = async (req, res) => {
-    const { email, password } = req.body;
-
+export const loginUser = async (req, res) => {
     try {
+        const { email, password } = req.body;
         const user = await User.findOne({ email });
-
-        if (user && (await user.matchPassword(password))) {
+        if (user && (await bcrypt.compare(password, user.password))) {
             res.json({
-                _id: user._id,
+                _id: user.id,
                 name: user.name,
                 email: user.email,
                 role: user.role,
-                manager: user.manager,
-                token: generateToken(user._id),
+                token: generateToken(user._id)
             });
         } else {
-            res.status(401).json({ message: 'Invalid email or password' });
+            res.status(401).json({ message: 'Invalid credentials' });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-const getUserProfile = async (req, res) => {
-    try {
-        const user = await User.findById(req.user._id).populate('manager', 'name email');
-
-        if (user) {
-            res.json({
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                manager: user.manager,
-            });
-        } else {
-            res.status(404).json({ message: 'User not found' });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-const getUsers = async (req, res) => {
-    try {
-        const users = await User.find({}).populate('manager', 'name');
-        res.json(users);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-module.exports = {
-    registerUser,
-    authUser,
-    getUserProfile,
-    getUsers
+export const getMe = async (req, res) => {
+    res.status(200).json(req.user);
 };

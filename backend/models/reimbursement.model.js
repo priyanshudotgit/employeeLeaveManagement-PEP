@@ -1,34 +1,29 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const reimbursementSchema = new mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'User',
+    employeeId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User', 
+        required: true 
     },
-    amount: {
-        type: Number,
-        required: true,
+    title: { 
+        type: String, 
+        required: true 
     },
-    reason: {
-        type: String,
-        required: true,
+    description: { 
+        type: String, 
+        required: true 
     },
-    receiptUrl: {
-        type: String,
-        default: '',
+    amount: { 
+        type: Number, 
+        required: true 
     },
-    status: {
-        type: String,
-        enum: ['Pending', 'Approved', 'Rejected'],
-        default: 'Pending',
+    status: { 
+        type: String, 
+        enum: ['pending', 'approved', 'rejected'], 
+        default: 'pending' 
     },
-    resolver: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        default: null,
-    }
 }, { timestamps: true });
 
 const Reimbursement = mongoose.model('Reimbursement', reimbursementSchema);
-module.exports = Reimbursement;
+export default Reimbursement;

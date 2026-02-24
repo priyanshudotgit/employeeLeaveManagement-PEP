@@ -1,29 +1,24 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const connectDB = require('./config/db.js');
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import connectDB from './config/db.js';
+
+import authRoutes from './routes/auth.route.js';
+import userRoutes from './routes/user.route.js';
+import leaveRoutes from './routes/leave.route.js';
+import reimbursementRoutes from './routes/reimbursement.route.js';
 
 dotenv.config();
 
-// connect to mongodb
-connectDB();
-
 const app = express();
 
-// middleware
 app.use(cors());
 app.use(express.json());
 
-// routes
-const authRoutes = require('./routes/auth.route.js');
-const leaveRoutes = require('./routes/leave.route.js');
-const reimbursementRoutes = require('./routes/reimbursement.route.js');
-const analyticsRoutes = require('./routes/analytics.route.js');
-
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/leaves', leaveRoutes);
 app.use('/api/reimbursements', reimbursementRoutes);
-app.use('/api/analytics', analyticsRoutes);
 
 app.get('/', (req, res) => {
     res.send('API is running...');
@@ -31,6 +26,8 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+connectDB().then(() => {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
 });

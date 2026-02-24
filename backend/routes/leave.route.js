@@ -1,11 +1,17 @@
-const express = require('express');
+import express from 'express';
+import { applyLeave, getMyLeaves, getTeamLeaves, approveLeave, rejectLeave } from '../controllers/leave.controller.js';
+import { protect } from '../middleware/auth.middleware.js';
+import { authorizeRoles } from '../middleware/role.middleware.js';
+
 const router = express.Router();
-const { applyLeave, getMyLeaves, getPendingLeaves, updateLeaveStatus } = require('../controllers/leave.controller.js');
-const { protect, manager } = require('../middleware/auth.middleware.js');
 
-router.route('/').post(protect, applyLeave);
-router.route('/my').get(protect, getMyLeaves);
-router.route('/pending').get(protect, manager, getPendingLeaves);
-router.route('/:id/status').put(protect, manager, updateLeaveStatus);
+router.use(protect);
 
-module.exports = router;
+router.post('/apply', applyLeave);
+router.get('/my', getMyLeaves);
+
+router.get('/team', authorizeRoles('manager', 'admin'), getTeamLeaves);
+router.patch('/:id/approve', authorizeRoles('manager', 'admin'), approveLeave);
+router.patch('/:id/reject', authorizeRoles('manager', 'admin'), rejectLeave);
+
+export default router;
