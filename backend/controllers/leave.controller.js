@@ -8,7 +8,16 @@ export const applyLeave = async (req, res) => {
         let managerId = req.user.managerId;
 
         if (!managerId) {
-            return res.status(400).json({ message: 'No manager assigned to you. Cannot apply for leave.' });
+            if (req.user.role === 'manager' || req.user.role === 'admin') {
+                const adminUser = await User.findOne({ role: 'admin' });
+                if (adminUser) {
+                    managerId = adminUser._id;
+                } else {
+                    return res.status(400).json({ message: 'No admin found to assign the leave request to.' });
+                }
+            } else {
+                return res.status(400).json({ message: 'No manager assigned to you. Cannot apply for leave.' });
+            }
         }
 
         const leave = await Leave.create({

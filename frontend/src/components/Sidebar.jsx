@@ -28,6 +28,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
     if (user.role === 'manager') {
         links.push(
+            { name: 'Apply Leave', path: '/manager/apply-leave', icon: <Calendar size={20} /> },
             { name: 'My Reimbursements', path: '/employee/reimbursements', icon: <ReceiptText size={20} /> }
         );
     }
@@ -55,8 +56,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             >
                 <div className="h-16 flex items-center justify-between px-6 border-b border-charcoal-800">
                     <div className="flex items-center gap-2 text-emerald-400 font-bold text-xl">
-                        <MapPin size={24} />
-                        <span>EmpLMS</span>
+                        <span>ELMS</span>
                     </div>
                     <button className="md:hidden text-charcoal-400 hover:text-white" onClick={toggleSidebar}>
                         <X size={24} />

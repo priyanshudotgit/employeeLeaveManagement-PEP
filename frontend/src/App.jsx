@@ -30,12 +30,13 @@ function App() {
         <Route element={<Layout />}>
           {/* Employee Routes */}
           <Route path="/employee/dashboard" element={<ProtectedRoute allowedRoles={['employee']}> <EmployeeDashboard /> </ProtectedRoute>} />
-          <Route path="/employee/apply-leave" element={<ProtectedRoute allowedRoles={['employee']}> <ApplyLeave /> </ProtectedRoute>} />
+          <Route path="/employee/apply-leave" element={<ProtectedRoute allowedRoles={['employee', 'manager']}> <ApplyLeave /> </ProtectedRoute>} />
           <Route path="/employee/reimbursements" element={<ProtectedRoute allowedRoles={['employee', 'manager']}> <Reimbursements /> </ProtectedRoute>} />
 
           {/* Manager Routes */}
           <Route path="/manager/dashboard" element={<ProtectedRoute allowedRoles={['manager']}> <ManagerDashboard /> </ProtectedRoute>} />
           <Route path="/manager/leaves" element={<ProtectedRoute allowedRoles={['manager', 'admin']}> <ManagerLeaves /> </ProtectedRoute>} />
+          <Route path="/manager/apply-leave" element={<ProtectedRoute allowedRoles={['employee', 'manager']}> <ApplyLeave /> </ProtectedRoute>} />
 
           {/* Admin Routes */}
           <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['admin']}> <AdminDashboard /> </ProtectedRoute>} />

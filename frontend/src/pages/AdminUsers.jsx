@@ -219,9 +219,9 @@ const AdminUsers = () => {
                                             <select
                                                 value={u.managerId?._id || u.managerId || ''}
                                                 onChange={(e) => handleManagerChange(u._id, e.target.value)}
-                                                disabled={u.role !== 'employee'}
+                                                disabled={u.role === 'admin'}
                                                 className={`p-1 w-32 truncate rounded border border-charcoal-200 dark:border-charcoal-800 focus:outline-none 
-                                                    ${u.role !== 'employee' ? 'bg-charcoal-100 dark:bg-charcoal-800 text-charcoal-400 cursor-not-allowed' : 'bg-charcoal-50 dark:bg-charcoal-900'}`}
+                                                    ${u.role === 'admin' ? 'bg-charcoal-100 dark:bg-charcoal-800 text-charcoal-400 cursor-not-allowed' : 'bg-charcoal-50 dark:bg-charcoal-900'}`}
                                             >
                                                 <option value="">None</option>
                                                 {managers.map(manager => (

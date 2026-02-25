@@ -40,10 +40,9 @@ const Register = () => {
                 <div className="absolute -bottom-[50%] -left-[50%] w-[150%] h-[150%] bg-gradient-to-t from-indigo-500/20 to-transparent rounded-full blur-3xl transform -rotate-12"></div>
 
                 <div className="relative z-10 flex items-center gap-2 text-white font-bold text-2xl tracking-tight">
-                    <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center">
-                        <Calendar size={20} className="text-white" />
+                    <div className="h-8 rounded-lg bg-linear-to-r bg-gradient-to-br from-indigo-650 via-charcoal-800 to-indigo-900 flex items-center justify-center p-5">
+                        ELMS
                     </div>
-                    LumisHR
                 </div>
 
                 <div className="relative z-10 max-w-lg">
@@ -69,7 +68,7 @@ const Register = () => {
                 </div>
 
                 <div className="relative z-10 text-sm text-indigo-50/50">
-                    © 2026 LumisHR Technologies
+                    © Employee Leave Management System
                 </div>
             </div>
 

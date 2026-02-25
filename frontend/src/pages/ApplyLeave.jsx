@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { applyLeave } from '../services/leave.service';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import { motion } from 'framer-motion';
+import { AuthContext } from '../context/AuthContext';
 
 const ApplyLeave = () => {
+    const { user } = useContext(AuthContext);
     const [formData, setFormData] = useState({ leaveType: 'Sick', startDate: '', endDate: '', reason: '' });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -19,7 +21,13 @@ const ApplyLeave = () => {
         try {
             await applyLeave(formData);
             toast.success('Leave applied successfully');
-            navigate('/employee/dashboard');
+            if (user?.role === 'manager') {
+                navigate('/manager/dashboard');
+            } else if (user?.role === 'admin') {
+                navigate('/admin/dashboard');
+            } else {
+                navigate('/employee/dashboard');
+            }
         } catch (error) {
             toast.error(error.response?.data?.message || 'Failed to apply for leave');
         } finally {

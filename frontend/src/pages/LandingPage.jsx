@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Calendar, ReceiptText, ShieldCheck, PieChart, ArrowRight, CheckCircle2 } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
+import video from '../assets/logo1.mp4'
 
 const LandingPage = () => {
     return (
@@ -10,10 +11,16 @@ const LandingPage = () => {
             <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-charcoal-900/80 backdrop-blur-md border-b border-charcoal-200 dark:border-charcoal-800">
                 <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
                     <div className="flex items-center gap-2 text-emerald-500 dark:text-emerald-400 font-bold text-2xl tracking-tight">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
-                            <Calendar size={20} className="text-white" />
+                        <div className="w-30 h-15 overflow-hidden rounded-lg flex-shrink-0">
+                            <video 
+                                src={video} 
+                                autoPlay 
+                                loop 
+                                muted 
+                                playsInline 
+                                className="w-full h-full object-cover"
+                            />
                         </div>
-                        LumisHR
                     </div>
                     <div className="flex items-center gap-3 sm:gap-6">
                         <ThemeToggle />
@@ -31,19 +38,6 @@ const LandingPage = () => {
             {/* Hero Section */}
             <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
                 <div className="text-center max-w-3xl mx-auto">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-sm font-medium mb-8"
-                    >
-                        <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                        </span>
-                        LumisHR 2.0 is now live
-                    </motion.div>
-
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -101,16 +95,16 @@ const LandingPage = () => {
                             <div className="h-4 bg-charcoal-200 dark:bg-charcoal-800 rounded-md w-5/6"></div>
                             <div className="h-4 bg-charcoal-200 dark:bg-charcoal-800 rounded-md w-full"></div>
                         </div>
-                        <div className="flex-1 flex flex-col gap-3 sm:gap-4 overflow-hidden">
-                            <div className="h-10 sm:h-16 bg-charcoal-50 dark:bg-charcoal-950 rounded-xl w-full shrink-0"></div>
+                        <div className="flex-1 flex flex-col gap-3 sm:gap-4 ">
+                            <div className="h-10 sm:h-0 bg-charcoal-100 dark:bg-charcoal-950 rounded-xl w-full shrink-0"></div>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 shrink-0">
                                 {[1, 2, 3, 4].map(i => (
-                                    <div key={i} className={`h-16 sm:h-24 rounded-xl opacity-90 ${['bg-indigo-500', 'bg-amber-500', 'bg-emerald-500', 'bg-purple-500'][i - 1]}`}></div>
+                                    <div key={i} className={`h-16 md:h-24 rounded-xl opacity-90 ${['bg-indigo-500', 'bg-amber-500', 'bg-emerald-500', 'bg-purple-500'][i - 1]}`}></div>
                                 ))}
                             </div>
-                            <div className="hidden sm:flex flex-1 bg-charcoal-50 dark:bg-charcoal-950 rounded-xl p-3 sm:p-4 min-h-[100px]">
+                            <div className="sm:flex flex-1 bg-charcoal-50 dark:bg-charcoal-950 rounded-xl p-3 sm:p-4 min-h-[80px]">
                                 <div className="h-full w-full border border-dashed border-charcoal-200 dark:border-charcoal-800 rounded-lg flex items-center justify-center p-4 text-center">
-                                    <p className="text-charcoal-400 dark:text-charcoal-600 font-medium tracking-widest uppercase text-xs sm:text-sm">Beautiful Analytics Inside</p>
+                                    <p className="text-charcoal-400 dark:text-charcoal-600 font-medium tracking-widest uppercase text-xs sm:text-sm">Dashboard Layout Preview</p>
                                 </div>
                             </div>
                         </div>
@@ -167,13 +161,9 @@ const LandingPage = () => {
             </div>
 
             {/* Footer */}
-            <footer className="bg-charcoal-50 dark:bg-charcoal-950 py-12 border-t border-charcoal-200 dark:border-charcoal-800">
+            <footer className="bg-charcoal-50 dark:bg-charcoal-950 py-2 border-t border-charcoal-200 dark:border-charcoal-800">
                 <div className="max-w-7xl mx-auto px-6 text-center text-charcoal-500 dark:text-charcoal-400">
-                    <div className="flex items-center justify-center gap-2 font-bold text-xl tracking-tight text-charcoal-900 dark:text-white mb-6">
-                        <Calendar size={20} className="text-emerald-500" />
-                        LumisHR
-                    </div>
-                    <p>© 2026 LumisHR. Built for modern workspaces.</p>
+                    <p>Developed by yours truly <strong>@priyanshudotgit</strong></p>
                 </div>
             </footer>
         </div>

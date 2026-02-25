@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getTeamLeaves, approveLeave, rejectLeave } from '../services/leave.service';
+import { getTeamLeaves, approveLeave, rejectLeave } from '../services/leave.service.js';
 import { toast } from 'react-toastify';
 import Button from '../components/ui/Button';
 import { motion } from 'framer-motion';
