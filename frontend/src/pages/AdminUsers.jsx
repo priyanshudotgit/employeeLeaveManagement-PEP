@@ -4,6 +4,8 @@ import { getManagers, createUser, assignManager } from '../services/user.service
 import { toast } from 'react-toastify';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
+import { motion } from 'framer-motion';
+import TableSkeleton from '../components/ui/TableSkeleton';
 
 const AdminUsers = () => {
     const [users, setUsers] = useState([]);
@@ -85,17 +87,29 @@ const AdminUsers = () => {
     };
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold">User Management</h2>
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+        >
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                <div>
+                    <h2 className="text-3xl font-bold tracking-tight text-charcoal-900 dark:text-white">User Management</h2>
+                    <p className="text-charcoal-500 dark:text-charcoal-400 mt-1">Add, update, and remove users across the platform.</p>
+                </div>
                 <Button onClick={() => setShowAddForm(!showAddForm)}>
                     {showAddForm ? 'Cancel Form' : 'Add New User'}
                 </Button>
             </div>
 
             {showAddForm && (
-                <div className="bg-white dark:bg-charcoal-950 p-6 rounded-xl border border-charcoal-200 dark:border-charcoal-800 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
-                    <h3 className="text-lg font-bold mb-4">Create New User</h3>
+                <motion.div
+                    initial={{ opacity: 0, height: 0, overflow: 'hidden' }}
+                    animate={{ opacity: 1, height: 'auto', overflow: 'visible' }}
+                    exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
+                    className="bg-white dark:bg-charcoal-950 p-6 rounded-2xl border border-charcoal-200 dark:border-charcoal-800 shadow-sm"
+                >
+                    <h3 className="text-xl font-bold tracking-tight mb-6">Create New User</h3>
                     <form onSubmit={handleAddUser} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Input label="Name" value={newUser.name} onChange={e => setNewUser({ ...newUser, name: e.target.value })} required />
                         <Input label="Email" type="email" value={newUser.email} onChange={e => setNewUser({ ...newUser, email: e.target.value })} required />
@@ -138,12 +152,17 @@ const AdminUsers = () => {
                             </Button>
                         </div>
                     </form>
-                </div>
+                </motion.div>
             )}
 
-            <div className="bg-white dark:bg-charcoal-950 p-6 rounded-xl border border-charcoal-200 dark:border-charcoal-800 shadow-sm">
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1 }}
+                className="bg-white dark:bg-charcoal-950 p-6 rounded-2xl border border-charcoal-200 dark:border-charcoal-800 shadow-sm"
+            >
                 {loading ? (
-                    <p>Loading...</p>
+                    <TableSkeleton rows={5} />
                 ) : users.length === 0 ? (
                     <p className="text-charcoal-500">No users found.</p>
                 ) : (
@@ -199,8 +218,8 @@ const AdminUsers = () => {
                         </table>
                     </div>
                 )}
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 };
 export default AdminUsers;

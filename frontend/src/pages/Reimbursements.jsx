@@ -3,6 +3,8 @@ import { getMyReimbursements, submitReimbursement } from '../services/reimbursem
 import { toast } from 'react-toastify';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
+import { motion } from 'framer-motion';
+import TableSkeleton from '../components/ui/TableSkeleton';
 
 const Reimbursements = () => {
     const [reimbursements, setReimbursements] = useState([]);
@@ -43,9 +45,23 @@ const Reimbursements = () => {
     };
 
     return (
-        <div className="space-y-8 max-w-5xl mx-auto">
-            <div className="bg-white dark:bg-charcoal-950 p-6 rounded-xl border border-charcoal-200 dark:border-charcoal-800 shadow-sm mt-4">
-                <h2 className="text-xl font-bold mb-6">Request Reimbursement</h2>
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6 max-w-5xl mx-auto"
+        >
+            <div className="mb-6">
+                <h2 className="text-3xl font-bold tracking-tight text-charcoal-900 dark:text-white">Reimbursements</h2>
+                <p className="text-charcoal-500 dark:text-charcoal-400 mt-1">Submit new claims and track existing reimbursements.</p>
+            </div>
+
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1 }}
+                className="bg-white dark:bg-charcoal-950 p-6 rounded-2xl border border-charcoal-200 dark:border-charcoal-800 shadow-sm"
+            >
+                <h2 className="text-xl font-bold tracking-tight mb-6">Request Reimbursement</h2>
                 <form onSubmit={handleSubmit} className="space-y-4 max-w-2xl border-b border-charcoal-100 dark:border-charcoal-800 pb-8">
                     <Input label="Title" name="title" value={formData.title} onChange={handleChange} required placeholder="E.g., Travel Expense" />
                     <div className="flex flex-col gap-1.5 w-full">
@@ -56,10 +72,17 @@ const Reimbursements = () => {
 
                     <Button type="submit" disabled={submitting}>{submitting ? 'Submitting...' : 'Submit Request'}</Button>
                 </form>
+            </motion.div>
 
-                <h2 className="text-xl font-bold mt-8 mb-4">My Requests</h2>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-white dark:bg-charcoal-950 p-6 rounded-2xl border border-charcoal-200 dark:border-charcoal-800 shadow-sm mt-8"
+            >
+                <h2 className="text-xl font-bold tracking-tight mb-6">My Recent Requests</h2>
                 {loading ? (
-                    <p>Loading...</p>
+                    <TableSkeleton rows={3} />
                 ) : reimbursements.length === 0 ? (
                     <p className="text-charcoal-500">No reimbursements found.</p>
                 ) : (
@@ -94,8 +117,8 @@ const Reimbursements = () => {
                         </table>
                     </div>
                 )}
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 };
 export default Reimbursements;

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { getTeamLeaves, approveLeave, rejectLeave } from '../services/leave.service';
 import { toast } from 'react-toastify';
 import Button from '../components/ui/Button';
+import { motion } from 'framer-motion';
+import TableSkeleton from '../components/ui/TableSkeleton';
 
 const ManagerLeaves = () => {
     const [leaves, setLeaves] = useState([]);
@@ -34,12 +36,24 @@ const ManagerLeaves = () => {
     };
 
     return (
-        <div className="space-y-6">
-            <h2 className="text-2xl font-bold">Team Leaves</h2>
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+        >
+            <div className="mb-6">
+                <h2 className="text-3xl font-bold tracking-tight text-charcoal-900 dark:text-white">Team Leaves</h2>
+                <p className="text-charcoal-500 dark:text-charcoal-400 mt-1">Review and manage leave requests from your team.</p>
+            </div>
 
-            <div className="bg-white dark:bg-charcoal-950 p-6 rounded-xl border border-charcoal-200 dark:border-charcoal-800 shadow-sm">
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1 }}
+                className="bg-white dark:bg-charcoal-950 p-6 rounded-2xl border border-charcoal-200 dark:border-charcoal-800 shadow-sm"
+            >
                 {loading ? (
-                    <p>Loading...</p>
+                    <TableSkeleton rows={4} />
                 ) : leaves.length === 0 ? (
                     <p className="text-charcoal-500">No team leave requests found.</p>
                 ) : (
@@ -87,8 +101,8 @@ const ManagerLeaves = () => {
                         </table>
                     </div>
                 )}
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 };
 export default ManagerLeaves;

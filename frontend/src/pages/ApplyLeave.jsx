@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
+import { motion } from 'framer-motion';
 
 const ApplyLeave = () => {
     const [formData, setFormData] = useState({ leaveType: 'Sick', startDate: '', endDate: '', reason: '' });
@@ -27,8 +28,12 @@ const ApplyLeave = () => {
     };
 
     return (
-        <div className="max-w-2xl mx-auto bg-white dark:bg-charcoal-950 p-6 rounded-xl border border-charcoal-200 dark:border-charcoal-800 shadow-sm mt-4 transition-colors">
-            <h2 className="text-2xl font-bold mb-6">Apply for Leave</h2>
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-2xl mx-auto bg-white dark:bg-charcoal-950 p-6 rounded-2xl border border-charcoal-200 dark:border-charcoal-800 shadow-sm mt-4 transition-colors"
+        >
+            <h2 className="text-2xl font-bold mb-6 tracking-tight">Apply for Leave</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="flex flex-col gap-1.5 w-full">
                     <label className="text-sm font-medium text-charcoal-700 dark:text-charcoal-300">Leave Type</label>
@@ -66,7 +71,7 @@ const ApplyLeave = () => {
                     {loading ? 'Submitting...' : 'Submit Application'}
                 </Button>
             </form>
-        </div>
+        </motion.div>
     );
 };
 export default ApplyLeave;

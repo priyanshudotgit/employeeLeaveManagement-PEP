@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
+import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import EmployeeDashboard from './pages/EmployeeDashboard';
@@ -21,6 +22,7 @@ function App() {
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
       <Routes>
         {/* Public Routes */}
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
@@ -41,8 +43,7 @@ function App() {
           <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['admin']}> <AdminUsers /> </ProtectedRoute>} />
         </Route>
 
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );
