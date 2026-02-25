@@ -45,7 +45,7 @@ const ApplyLeave = () => {
                     </select>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     <Input label="Start Date" type="date" name="startDate" value={formData.startDate} onChange={handleChange} required />
                     <Input label="End Date" type="date" name="endDate" value={formData.endDate} onChange={handleChange} required />
                 </div>

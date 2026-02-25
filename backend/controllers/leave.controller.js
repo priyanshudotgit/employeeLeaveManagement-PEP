@@ -4,12 +4,11 @@ import User from '../models/user.model.js';
 export const applyLeave = async (req, res) => {
     try {
         const { leaveType, startDate, endDate, reason } = req.body;
-        let { managerId } = req.body;
+
+        let managerId = req.user.managerId;
 
         if (!managerId) {
-            const defaultManager = await User.findOne({ role: { $in: ['manager', 'admin'] } });
-            if (!defaultManager) return res.status(400).json({ message: 'No manager available in the system' });
-            managerId = defaultManager._id;
+            return res.status(400).json({ message: 'No manager assigned to you. Cannot apply for leave.' });
         }
 
         const leave = await Leave.create({

@@ -29,7 +29,7 @@ function App() {
           {/* Employee Routes */}
           <Route path="/employee/dashboard" element={<ProtectedRoute allowedRoles={['employee']}> <EmployeeDashboard /> </ProtectedRoute>} />
           <Route path="/employee/apply-leave" element={<ProtectedRoute allowedRoles={['employee']}> <ApplyLeave /> </ProtectedRoute>} />
-          <Route path="/employee/reimbursements" element={<ProtectedRoute allowedRoles={['employee']}> <Reimbursements /> </ProtectedRoute>} />
+          <Route path="/employee/reimbursements" element={<ProtectedRoute allowedRoles={['employee', 'manager']}> <Reimbursements /> </ProtectedRoute>} />
 
           {/* Manager Routes */}
           <Route path="/manager/dashboard" element={<ProtectedRoute allowedRoles={['manager']}> <ManagerDashboard /> </ProtectedRoute>} />

@@ -1,10 +1,11 @@
 import { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { LayoutDashboard, Calendar, ReceiptText, Users, MapPin, X } from 'lucide-react';
+import { LayoutDashboard, Calendar, ReceiptText, Users, MapPin, X, LogOut } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
-    const { user } = useContext(AuthContext);
+    const { user, logout } = useContext(AuthContext);
 
     if (!user) return null;
 
@@ -22,6 +23,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     if (user.role === 'manager' || user.role === 'admin') {
         links.push(
             { name: 'Team Leaves', path: '/manager/leaves', icon: <Calendar size={20} /> }
+        );
+    }
+
+    if (user.role === 'manager') {
+        links.push(
+            { name: 'My Reimbursements', path: '/employee/reimbursements', icon: <ReceiptText size={20} /> }
         );
     }
 
@@ -75,7 +82,27 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                             <span className="font-medium">{link.name}</span>
                         </NavLink>
                     ))}
+
+                    {/* Mobile Logout Route inside Sidebar */}
+                    {/* <button
+                        onClick={logout}
+                        className="md:hidden mt-auto flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors w-full text-left border-2"
+                    >
+                        <LogOut size={20} />
+                        <span className="font-medium">Logout</span>
+                    </button> */}
                 </nav>
+
+                <div className="mt-auto p-4 border-t border-charcoal-800 flex items-center justify-between bg-charcoal-900/50">
+                    <ThemeToggle />
+                    <button
+                        onClick={logout}
+                        className="flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg bg-charcoal-800 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 border border-charcoal-700 hover:border-red-200 dark:hover:border-red-800 transition-all shadow-sm"
+                    >
+                        <LogOut size={16} />
+                        <span className="hidden sm:inline">Logout</span>
+                    </button>
+                </div>
             </aside>
         </>
     );

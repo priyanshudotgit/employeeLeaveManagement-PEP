@@ -2,24 +2,29 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
-    name: { 
-        type: String, 
-        required: true 
+    name: {
+        type: String,
+        required: true
     },
-    email: { 
-        type: String, 
-        required: true, 
-        unique: true 
+    email: {
+        type: String,
+        required: true,
+        unique: true
     },
-    password: { 
-        type: String, 
-        required: true 
+    password: {
+        type: String,
+        required: true
     },
-    role: { 
-        type: String, 
-        enum: ['admin', 'manager', 'employee'], 
-        default: 'employee' 
+    role: {
+        type: String,
+        enum: ['admin', 'manager', 'employee'],
+        default: 'employee'
     },
+    managerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null
+    }
 }, { timestamps: true });
 
 userSchema.pre('save', async function () {

@@ -18,19 +18,12 @@ const Navbar = ({ toggleSidebar }) => {
             </div>
 
             <div className="flex items-center gap-2 md:gap-4">
-                <ThemeToggle />
                 {user && (
                     <div className="flex items-center gap-3">
                         <span className="text-sm font-medium hidden md:block">{user.name}</span>
                         <div className="h-8 w-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-sm">
                             {user.name.charAt(0).toUpperCase()}
                         </div>
-                        <button
-                            onClick={logout}
-                            className="text-sm px-3 py-1.5 rounded bg-charcoal-100 hover:bg-charcoal-200 dark:bg-charcoal-800 dark:hover:bg-charcoal-700 transition-colors hidden sm:block"
-                        >
-                            Logout
-                        </button>
                     </div>
                 )}
             </div>

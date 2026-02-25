@@ -1,34 +1,56 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
+import { getManagers, createUser, assignManager } from '../services/user.service';
 import { toast } from 'react-toastify';
 import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
 
 const AdminUsers = () => {
     const [users, setUsers] = useState([]);
+    const [managers, setManagers] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const fetchUsers = async () => {
+    // Add User Form State
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [newUser, setNewUser] = useState({ name: '', email: '', password: '', role: 'employee', managerId: '' });
+    const [addingUser, setAddingUser] = useState(false);
+
+    const fetchData = async () => {
         try {
-            const response = await api.get('/users');
-            setUsers(response.data);
+            const [usersRes, managersData] = await Promise.all([
+                api.get('/users'),
+                getManagers()
+            ]);
+            setUsers(usersRes.data);
+            setManagers(managersData);
         } catch (error) {
-            toast.error('Failed to load users');
+            toast.error('Failed to load users data');
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchUsers();
+        fetchData();
     }, []);
 
     const handleRoleChange = async (id, newRole) => {
         try {
             await api.patch(`/users/${id}/role`, { role: newRole });
             toast.success('User role updated');
-            fetchUsers();
+            fetchData();
         } catch (error) {
             toast.error('Failed to update role');
+        }
+    };
+
+    const handleManagerChange = async (userId, managerId) => {
+        try {
+            await assignManager(userId, managerId);
+            toast.success('Manager assigned successfully');
+            fetchData();
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Failed to assign manager');
         }
     };
 
@@ -37,15 +59,87 @@ const AdminUsers = () => {
         try {
             await api.delete(`/users/${id}`);
             toast.success('User deleted');
-            fetchUsers();
+            fetchData();
         } catch (error) {
             toast.error('Failed to delete user');
         }
     };
 
+    const handleAddUser = async (e) => {
+        e.preventDefault();
+        setAddingUser(true);
+        try {
+            const payload = { ...newUser };
+            if (payload.managerId === '') delete payload.managerId;
+
+            await createUser(payload);
+            toast.success('User created successfully');
+            setShowAddForm(false);
+            setNewUser({ name: '', email: '', password: '', role: 'employee', managerId: '' });
+            fetchData();
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Failed to create user');
+        } finally {
+            setAddingUser(false);
+        }
+    };
+
     return (
         <div className="space-y-6">
-            <h2 className="text-2xl font-bold">User Management</h2>
+            <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold">User Management</h2>
+                <Button onClick={() => setShowAddForm(!showAddForm)}>
+                    {showAddForm ? 'Cancel Form' : 'Add New User'}
+                </Button>
+            </div>
+
+            {showAddForm && (
+                <div className="bg-white dark:bg-charcoal-950 p-6 rounded-xl border border-charcoal-200 dark:border-charcoal-800 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
+                    <h3 className="text-lg font-bold mb-4">Create New User</h3>
+                    <form onSubmit={handleAddUser} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Input label="Name" value={newUser.name} onChange={e => setNewUser({ ...newUser, name: e.target.value })} required />
+                        <Input label="Email" type="email" value={newUser.email} onChange={e => setNewUser({ ...newUser, email: e.target.value })} required />
+                        <Input label="Password" type="password" value={newUser.password} onChange={e => setNewUser({ ...newUser, password: e.target.value })} required />
+
+                        <div className="flex flex-col gap-1.5 w-full">
+                            <label className="text-sm font-medium text-charcoal-700 dark:text-charcoal-300">Role</label>
+                            <select
+                                value={newUser.role}
+                                onChange={e => setNewUser({ ...newUser, role: e.target.value })}
+                                className="px-4 py-2.5 rounded-lg border bg-white dark:bg-charcoal-950 text-charcoal-900 dark:text-charcoal-50 border-charcoal-200 dark:border-charcoal-800 hover:border-charcoal-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                            >
+                                <option value="employee">Employee</option>
+                                <option value="manager">Manager</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+
+                        {newUser.role === 'employee' && (
+                            <div className="flex flex-col gap-1.5 w-full">
+                                <label className="text-sm font-medium text-charcoal-700 dark:text-charcoal-300">Assign Manager</label>
+                                <select
+                                    value={newUser.managerId}
+                                    onChange={e => setNewUser({ ...newUser, managerId: e.target.value })}
+                                    className="px-4 py-2.5 rounded-lg border bg-white dark:bg-charcoal-950 text-charcoal-900 dark:text-charcoal-50 border-charcoal-200 dark:border-charcoal-800 hover:border-charcoal-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                                >
+                                    <option value="">No Manager / Leave Empty</option>
+                                    {managers.map(manager => (
+                                        <option key={manager._id} value={manager._id}>
+                                            {manager.name} ({manager.email})
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+
+                        <div className="md:col-span-2 flex justify-end mt-2">
+                            <Button type="submit" disabled={addingUser}>
+                                {addingUser ? 'Creating...' : 'Create User'}
+                            </Button>
+                        </div>
+                    </form>
+                </div>
+            )}
 
             <div className="bg-white dark:bg-charcoal-950 p-6 rounded-xl border border-charcoal-200 dark:border-charcoal-800 shadow-sm">
                 {loading ? (
@@ -60,6 +154,7 @@ const AdminUsers = () => {
                                     <th className="py-3 px-4">Name</th>
                                     <th className="py-3 px-4">Email</th>
                                     <th className="py-3 px-4">Role</th>
+                                    <th className="py-3 px-4">Manager</th>
                                     <th className="py-3 px-4">Actions</th>
                                 </tr>
                             </thead>
@@ -77,6 +172,22 @@ const AdminUsers = () => {
                                                 <option value="employee">Employee</option>
                                                 <option value="manager">Manager</option>
                                                 <option value="admin">Admin</option>
+                                            </select>
+                                        </td>
+                                        <td className="py-3 px-4">
+                                            <select
+                                                value={u.managerId?._id || u.managerId || ''}
+                                                onChange={(e) => handleManagerChange(u._id, e.target.value)}
+                                                disabled={u.role !== 'employee'}
+                                                className={`p-1 w-32 truncate rounded border border-charcoal-200 dark:border-charcoal-800 focus:outline-none 
+                                                    ${u.role !== 'employee' ? 'bg-charcoal-100 dark:bg-charcoal-800 text-charcoal-400 cursor-not-allowed' : 'bg-charcoal-50 dark:bg-charcoal-900'}`}
+                                            >
+                                                <option value="">None</option>
+                                                {managers.map(manager => (
+                                                    <option key={manager._id} value={manager._id}>
+                                                        {manager.name}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </td>
                                         <td className="py-3 px-4">

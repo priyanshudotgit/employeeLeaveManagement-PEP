@@ -40,20 +40,20 @@ const ManagerDashboard = () => {
                 <SummaryCard
                     title="Total Team Leaves"
                     value={leaves.length}
-                    icon={<Users size={24} />}
-                    colorClass="bg-charcoal-100 text-charcoal-600 dark:bg-charcoal-800 dark:text-charcoal-400"
+                    icon={<Users size={28} />}
+                    colorClass="bg-gradient-to-br from-blue-500 to-indigo-600"
                 />
                 <SummaryCard
                     title="Pending Approvals"
                     value={pendingLeaves}
-                    icon={<Clock size={24} />}
-                    colorClass="bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-500"
+                    icon={<Clock size={28} />}
+                    colorClass="bg-gradient-to-br from-amber-400 to-orange-500"
                 />
                 <SummaryCard
                     title="Approved Leaves"
                     value={approvedLeaves}
-                    icon={<CheckCircle size={24} />}
-                    colorClass="bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-500"
+                    icon={<CheckCircle size={28} />}
+                    colorClass="bg-gradient-to-br from-emerald-400 to-teal-500"
                 />
             </div>
 
