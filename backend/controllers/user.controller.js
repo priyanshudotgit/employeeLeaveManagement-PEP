@@ -32,7 +32,8 @@ export const createUser = async (req, res) => {
             email,
             password,
             role: role || 'employee',
-            managerId: managerId || null
+            managerId: managerId || null,
+            status: 'active'
         });
 
         res.status(201).json({
@@ -40,7 +41,8 @@ export const createUser = async (req, res) => {
             name: user.name,
             email: user.email,
             role: user.role,
-            managerId: user.managerId
+            managerId: user.managerId,
+            status: user.status
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -95,6 +97,30 @@ export const updateUserRole = async (req, res) => {
             name: updatedUser.name,
             email: updatedUser.email,
             role: updatedUser.role
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const updateUserStatus = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const { status } = req.body;
+        if (!['pending', 'active', 'inactive'].includes(status)) {
+            return res.status(400).json({ message: 'Invalid status' });
+        }
+        user.status = status;
+        const updatedUser = await user.save();
+        res.json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            role: updatedUser.role,
+            status: updatedUser.status
         });
     } catch (error) {
         res.status(500).json({ message: error.message });

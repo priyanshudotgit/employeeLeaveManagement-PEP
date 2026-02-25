@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUsers, getManagers, updateUserRole, deleteUser, createUser, assignManager } from '../controllers/user.controller.js';
+import { getUsers, getManagers, updateUserRole, updateUserStatus, deleteUser, createUser, assignManager } from '../controllers/user.controller.js';
 import { protect } from '../middleware/auth.middleware.js';
 import { authorizeRoles } from '../middleware/role.middleware.js';
 
@@ -16,6 +16,7 @@ router.route('/')
     .post(createUser);
 
 router.route('/:id/role').patch(updateUserRole);
+router.route('/:id/status').patch(updateUserStatus);
 router.route('/:id/manager').patch(assignManager);
 router.route('/:id').delete(deleteUser);
 

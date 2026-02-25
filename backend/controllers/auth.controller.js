@@ -28,7 +28,7 @@ export const registerUser = async (req, res) => {
                 email: user.email,
                 role: user.role,
                 managerId: user.managerId,
-                token: generateToken(user._id)
+                message: 'User registered successfully. Please wait for admin approval.'
             });
         } else {
             res.status(400).json({ message: 'Invalid user data' });
@@ -42,7 +42,15 @@ export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
+
         if (user && (await bcrypt.compare(password, user.password))) {
+            if (user.status === 'pending') {
+                return res.status(403).json({ message: 'Account pending admin approval' });
+            }
+            if (user.status === 'inactive') {
+                return res.status(403).json({ message: 'Account deactivated' });
+            }
+
             res.json({
                 _id: user.id,
                 name: user.name,

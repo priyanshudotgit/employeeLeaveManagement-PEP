@@ -13,7 +13,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-    origin: process.env.CLIENT_URL || "https://your-vercel-frontend-url.vercel.app",
+    origin: [process.env.CLIENT_URL, "https://employee-lms-silk.vercel.app", "http://localhost:5173"],
     credentials: true
 }));
 app.use(express.json());

@@ -21,9 +21,9 @@ const Register = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const user = await register(formData);
-            toast.success('Account created successfully');
-            navigate(`/${user.role}/dashboard`);
+            await register(formData);
+            toast.success('Account created! Please wait for admin approval.');
+            navigate('/login');
         } catch (error) {
             toast.error(error.response?.data?.message || 'Registration failed');
         } finally {

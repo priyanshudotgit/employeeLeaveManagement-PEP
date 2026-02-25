@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
-import { getManagers, createUser, assignManager } from '../services/user.service';
+import { getManagers, createUser, assignManager, updateUserStatus } from '../services/user.service';
 import { toast } from 'react-toastify';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
@@ -43,6 +43,16 @@ const AdminUsers = () => {
             fetchData();
         } catch (error) {
             toast.error('Failed to update role');
+        }
+    };
+
+    const handleStatusChange = async (id, newStatus) => {
+        try {
+            await updateUserStatus(id, newStatus);
+            toast.success('User status updated');
+            fetchData();
+        } catch (error) {
+            toast.error('Failed to update status');
         }
     };
 
@@ -173,6 +183,7 @@ const AdminUsers = () => {
                                     <th className="py-3 px-4">Name</th>
                                     <th className="py-3 px-4">Email</th>
                                     <th className="py-3 px-4">Role</th>
+                                    <th className="py-3 px-4">Status</th>
                                     <th className="py-3 px-4">Manager</th>
                                     <th className="py-3 px-4">Actions</th>
                                 </tr>
@@ -191,6 +202,17 @@ const AdminUsers = () => {
                                                 <option value="employee">Employee</option>
                                                 <option value="manager">Manager</option>
                                                 <option value="admin">Admin</option>
+                                            </select>
+                                        </td>
+                                        <td className="py-3 px-4">
+                                            <select
+                                                value={u.status || 'pending'}
+                                                onChange={(e) => handleStatusChange(u._id, e.target.value)}
+                                                className={`p-1 rounded border border-charcoal-200 dark:border-charcoal-800 focus:outline-none ${u.status === 'active' ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600' : u.status === 'inactive' ? 'bg-red-50 dark:bg-red-900/20 text-red-600' : 'bg-amber-50 dark:bg-amber-900/20 text-amber-600'}`}
+                                            >
+                                                <option value="pending">Pending</option>
+                                                <option value="active">Active</option>
+                                                <option value="inactive">Inactive</option>
                                             </select>
                                         </td>
                                         <td className="py-3 px-4">

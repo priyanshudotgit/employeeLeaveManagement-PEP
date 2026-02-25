@@ -24,6 +24,11 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         default: null
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'active', 'inactive'],
+        default: 'pending'
     }
 }, { timestamps: true });
 
